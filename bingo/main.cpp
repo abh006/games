@@ -1,7 +1,8 @@
 #include<iostream>
 #include<vector>
 #include<numeric>
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
+#include<math.h>
 
 #define HIT_NUMBER -1
 
@@ -14,6 +15,7 @@ int callNumber(vector<int>);
 int getNeighbourSum(vector<int>, int, int);
 int getMaxWeightedCornerIndex(vector<int>);
 bool isBingo(vector<int>);
+void printMatrices(vector<int>, vector<int>, int[]);
 
 int main(){
     vector<int> numbers(25), hitMatrix(25);
@@ -32,6 +34,7 @@ int main(){
     while(num != 0){    
         turn=0;
         while(turn<noOfPlayers){
+            printMatrices(hitMatrix, numbers, origNumbers);
             if( turn==noOfPlayers-1){
                 num = numbers[callNumber(hitMatrix)];
                 cout<<"Computer says: "<<num<<endl;
@@ -60,6 +63,12 @@ int main(){
         }       
     }
 
+    printMatrices(hitMatrix, numbers, origNumbers);
+
+    return 0;
+}
+
+void printMatrices(vector<int> hitMatrix, vector<int> numbers, int origNumbers[]){
     cout<<"Hit Matrix"<<endl;
     for(int i=0; i<25; i++){
         if(i%5==0)
@@ -78,8 +87,6 @@ int main(){
             cout<<endl;
         cout<<origNumbers[i]<<" ";
     }
-
-    return 0;
 }
 
 vector<int> updateMatrix(vector<int> numbers, int num){
@@ -125,8 +132,8 @@ vector<int> getResultantCellWeightMatrix(vector<int> hitMatrix){
     // calculate weightMatrix
     int row=0, col=0, invertedHit;
     for(int i=0; i<25; i++){
-        row = i%5;
-        col = i/5;
+        row = i/5;
+        col = i%5;
         invertedHit = 1 - hitMatrix[i];
         weightMatrix[i] = (rowHit[row] + colHit[col])*invertedHit;
     }
@@ -174,9 +181,9 @@ int callNumber(vector<int> hitMatrix){
             maxNeighbourSum = neighbourSum;
             index = i;
         }else if(neighbourSum == maxNeighbourSum){
-            cornerDistance = getMaxWeightedCornerIndex(weightMatrix) - i;
+            cornerDistance = abs(getMaxWeightedCornerIndex(weightMatrix) - i);
             if(cornerDistance<minCornerDistance){
-                cornerDistance = minCornerDistance;
+                minCornerDistance = cornerDistance;
                 maxNeighbourSum = neighbourSum;
                 index = i;
             }
@@ -205,11 +212,11 @@ int getNeighbourSum(vector<int> weightMatrix, int row, int col){
                 continue;
             }
             num = weightMatrix[i*5+j];
+            if(num==0)
+                num = 26;
             if(i==j){
                 num+=1;
             }
-            if(num==-1)
-                num = 26;
             sum += num;
             
         }

@@ -1,2 +1,3 @@
-# play-bingo
-Play bingo with CPP
+# Games in CPP
+Play Bingo
+Solve sudoku
